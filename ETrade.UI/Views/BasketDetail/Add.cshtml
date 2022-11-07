@@ -1,0 +1,19 @@
+﻿@model ETrade.UI.Models.BasketDetailModel
+
+<div class="row">
+    <div class="col-md-7">
+        <div>
+            <label>Ürün</label>
+            <select name="Id" class="form-control">
+                @foreach (var item in @Model.ProductsDTO)
+                {
+                    <option value="@item.Id">@item.ProductName</option>
+                }
+            </select>
+        </div>
+        <div>
+            <label>Miktar</label>
+            <input class="form-control" type="text" asp-for="Amount"/>
+        </div>
+    </div>
+</div>

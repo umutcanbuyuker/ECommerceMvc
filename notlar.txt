@@ -1,0 +1,45 @@
+Basket'e eklenen ürünün sürekli orda kalmasý için:
+Entity Concrete basketmaster add:
+			        public bool Completed { get; set; }
+
+BasketMasterController 
+     {
+            var user = JsonConvert.DeserializeObject<UsersDTO>(HttpContext.Session.GetString("User"));
+            var incompletedMaster = _uow._basketMasterRep.Set().FirstOrDefault(x => x.Completed == false && x.EntityId == user.Id);
+            if (incompletedMaster != null)
+            {
+                return RedirectToAction("Add", "BasketDetail", new { id = incompletedMaster.Id });
+            }
+            else
+            {
+                _basketMaster.OrderDate = DateTime.Now;
+                _basketMaster.EntityId = user.Id;       //id
+                _uow._basketMasterRep.Add(_basketMaster);
+                _uow.Commit();
+                return RedirectToAction("Add", "BasketDetail", new { id = _basketMaster.Id });
+            }
+        }
+Scope Ekledik:
+builder.Services.AddScoped<BasketDetail>();
+
+BasketMasterDetail'e add' view ekledik.
+BasketDetailModel oluþturduk:
+                 public List<Products> Products { get; set; }
+DTO add ProductDTO
+                    public class ProductDTO
+                    {
+                        public int Id { get; set; }
+                        public string ProductName { get; set; }
+                    }
+Repos ABstracts IProductRep
+                            List<ProductDTO> GetProductsSelect();
+Ýmplement ediyoruz ProductRep:
+                     public List<ProductDTO> GetProductsSelect()
+                {
+                   return Set().Select(x=> new ProductDTO {Id = x.Id, ProductName=x.ProductName}).ToList();
+                }
+add cshtml düzenledik
+ Amount ekledik diðerlerini products'dan çekeceðiz.
+ scope ekledik
+            builder.Services.AddScoped < BasketDetailModel>();>
+
