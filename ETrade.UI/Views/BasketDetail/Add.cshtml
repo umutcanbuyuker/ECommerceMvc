@@ -2,18 +2,51 @@
 
 <div class="row">
     <div class="col-md-7">
+        <form method="post">
+            <div>
+                <label>Ürün</label>
+                <select name="ProductId" class="form-control">
+                    @foreach (var item in @Model.ProductsDTO)
+                    {
+                        <option value="@item.Id">@item.ProductName</option>
+                    }
+                </select>
+            </div>
+            <div>
+                <label>Miktar</label>
+                <input class="form-control" type="text" asp-for="Amount" />
+            </div>
+            <input class="btn btn-primary" type="submit" value="Ekle"/>
+            <a class="btn btn-primary" href="/Payment/Index">Şiparişi Tamamla</a>
+        </form>
         <div>
-            <label>Ürün</label>
-            <select name="Id" class="form-control">
-                @foreach (var item in @Model.ProductsDTO)
+            <table class="table table-hover">
+                <tr>
+                    <th>Ürün Adı</th>
+                    <th>Miktar</th>
+                    <th>Birim</th>
+                    <th>KDV</th>
+                    <th>Birim Fiyat</th>
+                    <th>Toplam Fiyat</th>
+                </tr>
+                @foreach (var item in Model.basketDetailDTO)
                 {
-                    <option value="@item.Id">@item.ProductName</option>
+                    <tr>
+                        <td>@item.ProductName</td>
+                        <td>@item.Amount</td>
+                        <td>@item.UnitName</td>
+                        <td>@item.Vat</td>
+                        <td>@item.UnitPrice</td>
+                        <td>@item.Total</td>
+                        <td><a class="btn btn-primary" href="/BasketDetail/Update/@item.Id/?productId=@item.ProductId">Değiştir</a></td>
+                        <td><a class="btn btn-danger" href="/BasketDetail/Delete/@item.Id/?productId=@item.ProductId">Sil</a></td>
+                    </tr>
                 }
-            </select>
+            </table>
         </div>
+
         <div>
-            <label>Miktar</label>
-            <input class="form-control" type="text" asp-for="Amount"/>
+            <h4>Toplam :@Model.basketDetailDTO.Count() Adet Ürün @Model.basketDetailDTO.Sum(x => x.Total)</h4>
         </div>
     </div>
 </div>

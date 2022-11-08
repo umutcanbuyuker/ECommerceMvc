@@ -18,7 +18,7 @@ namespace ETrade.Entity.Concretes
         public decimal Ratio { get; set; }
         public int UnitId { get; set; }
 
-        [ForeignKey("OrderId")] 
+        [ForeignKey("Id")] 
         public BasketMaster BasketMaster { get; set; }
 
         [ForeignKey("UnitId")]

@@ -41,12 +41,26 @@ namespace ETrade.Core
                 return false;  
             }
         }
-
+        public bool Delete(int Id,int Id2)
+        {
+            try
+            {
+                Set().Remove(Find(Id,Id2));
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
         public T Find(int Id)
         {
             return Set().Find(Id);
         }
-
+        public T Find(int Id,int Id2)
+        {
+            return Set().Find(Id,Id2);
+        }
         public List<T> List()
         {
             return Set().ToList();

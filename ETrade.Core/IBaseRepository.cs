@@ -13,7 +13,9 @@ namespace ETrade.Core
         public T Find(int Id);
         public bool Update(T entity);
         public bool Delete(int Id);
+        public bool Delete(int Id, int Id2);
         public bool Add(T entity);
         public DbSet<T> Set();
+
     }
 }

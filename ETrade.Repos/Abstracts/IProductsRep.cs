@@ -12,5 +12,6 @@ namespace ETrade.Repos.Abstracts
     public interface IProductsRep : IBaseRepository<Products>
     {
         List<ProductDTO> GetProductsSelect();
+        Products FindWithVAT(int Id);
     }
 }

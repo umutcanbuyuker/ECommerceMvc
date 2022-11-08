@@ -14,6 +14,7 @@ namespace ETrade.Repos.Concretes
     {
         public BasketMasterRep(TradeContext db) : base(db)
         {
+
         }
     }
 }

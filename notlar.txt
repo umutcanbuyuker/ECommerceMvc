@@ -43,3 +43,106 @@ add cshtml düzenledik
  scope ekledik
             builder.Services.AddScoped < BasketDetailModel>();>
 
+----------------------------------------------------------------------------------------------8oct----------------------------------------------------------------------------------------------------
+Sepetteki ürünleri listeliycez
+
+BasketDetailDTO oluþturduk
+                              public class BasketDetailDTO
+                                {
+                                    public string ProductName { get; set; }
+                                    public decimal UnitPrice { get; set; }
+                                    public int Amount { get; set; }
+                                    public string UnitName { get; set; }
+                                    public decimal Vat { get; set; }
+                                    public decimal TotalPrice { get; set; }
+                                }
+BasketDetailModel'e:
+                                public List<BasketDetailDTO> basketDetailDTO { get; set; }
+Þimdi metodunu yazacaðýz abstract IBasketDetailRep'e geliyoruz:
+                                List<BasketDetailDTO> basketDetailDTOs(int MasterId); //login olmuþ user'a ait sepeti çekeceðiz. Yoksa bütün sepetleri çeker. 
+                               // yukarýdaki masterId basketmastercontroller 30'daki Id den basketmaster'a ait Id çeker.
+BasketDetailRep
+                               public List<BasketDetailDTO> basketDetailDTOs(int MasterId)
+                                    {
+                                        return Set().Where(x=> x.Id == MasterId).Select(x=> new BasketDetailDTO
+                                        {
+                                            ProductName = x.Products.ProductName,
+                                            UnitName = x.Unit.Description,
+                                            Amount = x.Amount,
+                                            UnitPrice = x.UnitPrice,
+                                            Vat = x.Ratio,
+                                            Total = (x.UnitPrice*x.Amount)*(1+x.Ratio/100)
+                                        }).ToList();
+                                    }
+BasketDetailController Add metotuna ekledik:
+                                      _basketDetailModel.basketDetailDTO = _uow._basketDetailRep.basketDetailDTOs(id);
+ardýndan view'e pointer koyup sqlden basketdetail doldurup test ettik . basketdetaildto'da etek ürünü geldi.
+
+
+
+
+
+
+
+
+
+
+
+
+ödeme yapýldýktan sonra complete true olacak sonre sepet boþ gelecek. baþka bir user girerse sepet boþ gelecek.
+
+
+basketdetail model içinde id eksikti         public int ProductId { get; set; } koyduk ve add.cshtml 8 productid yaptýk
+
+
+
+
+
+
+
+<td>@item.Vat</td> null geliyor
+
+Iproductsrep ekledik
+                Products FindWithVAT(int Id);
+Productsrep:
+              public List<ProductDTO> GetProductsSelect()
+                {
+                   return Set().Select(x=> new ProductDTO {Id = x.Id, ProductName=x.ProductName}).ToList();
+                }
+Oluþturduðumuz metodu controllerda çaðýrýyoruz:  
+        28                    Products products = _uow._productsRep.FindWithVAT(id);
+
+
+
+
+Design Pattern araþtýr.
+             DTO'da lazy loading yapmama sebebimiz select'in otomatik yapmasý
+
+
+
+             Ödemeye yapýyoruz:
+Add controller add paymentcontroller
+
+basketdetaildto 
+                public int ProductId { get; set; }
+                public int Id { get; set; }
+IBaseRepository:
+                public bool Delete(int Id, int Id2);
+BaseRepository:
+                 public T Find(int Id,int Id2)
+                {
+                    return Set().Find(Id,Id2);
+                }
+                 public bool Delete(int Id,int Id2)
+                {
+                    try
+                    {
+                        Set().Remove(Find(Id,Id2));
+                        return true;
+                    }
+                    catch (Exception)
+                    {
+                        return false;
+                    }
+                }
+Find ve Delete ekledik kompozit keyler için Details id ve productid
