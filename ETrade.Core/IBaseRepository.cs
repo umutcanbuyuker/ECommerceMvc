@@ -11,6 +11,7 @@ namespace ETrade.Core
     {
         public List<T> List();
         public T Find(int Id);
+        public T Find(int Id,int Id2);
         public bool Update(T entity);
         public bool Delete(int Id);
         public bool Delete(int Id, int Id2);

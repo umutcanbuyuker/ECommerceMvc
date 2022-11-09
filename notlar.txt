@@ -146,3 +146,28 @@ BaseRepository:
                     }
                 }
 Find ve Delete ekledik kompozit keyler için Details id ve productid
+
+----------------------------------------------------------------------------------------------9oct----------------------------------------------------------------------------------------------------
+Session'ý sadece controllerda kullanabiliyoruz, layout sayfasýnda kullanamýyoruz diye bu videodaki gibi yapacaðýz: https://www.youtube.com/watch?v=TDY_DtTEkes 
+
+
+Update'i yapýyoruz BDC
+                public IActionResult Update(int Id,int productId)
+        {
+            var bd = _uow._basketDetailRep.Find(Id, productId);
+            return View(bd);
+        }
+        [HttpPost]
+        public IActionResult Update(BasketDetail x, int Id)
+        {
+            
+            _uow._basketDetailRep.Update(x);
+            _uow.Commit();
+            return RedirectToAction("Add", new { Id });
+        }
+View ekledik BasketDetail Model
+
+index konusunu anlattý hoca 
+
+18 aya kadar sigorta primi teþvikli personel
+aycan özkan,gizem arslanbaþ

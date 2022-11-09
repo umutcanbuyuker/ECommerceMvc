@@ -2,6 +2,7 @@
 using ETrade.UI.Models;
 using ETrade.Uw;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis;
 
 namespace ETrade.UI.Controllers
 {
@@ -44,5 +45,20 @@ namespace ETrade.UI.Controllers
             _uow.Commit();
             return RedirectToAction("Add", new { Id });
         }
+        public IActionResult Update(int Id,int productId)
+        {
+            var SelectedBDetail = _uow._basketDetailRep.Find(Id, productId);
+            return View(SelectedBDetail);
+        }
+        [HttpPost]
+        public IActionResult Update(int Amount, int Id, int productId)
+        {
+            var SelectedBDetail = _uow._basketDetailRep.Find(Id, productId);
+            SelectedBDetail.Amount = Amount;
+            _uow._basketDetailRep.Update(SelectedBDetail);
+            _uow.Commit();
+            return RedirectToAction("Add", new { Id });
+        }
+
     }
 }
